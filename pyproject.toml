@@ -1,0 +1,44 @@
+[project]
+name = "citytrips-nyc"
+version = "0.1.0"
+description = "A reproducible NYC taxi data pipeline and public analytics dashboard"
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "MIT" }
+dependencies = [
+  "beautifulsoup4>=4.12,<5",
+  "dbt-core>=1.12.3,<2",
+  "dbt-duckdb>=1.11,<2",
+  "duckdb>=1.4,<2",
+  "geopandas>=1.1,<2",
+  "pyarrow>=20,<25",
+  "pyyaml>=6,<7",
+  "requests>=2.32,<3",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<10",
+  "ruff>=0.14,<1",
+]
+
+[project.scripts]
+citytrips-refresh = "citytrips.pipeline:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/citytrips"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
