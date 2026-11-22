@@ -63,7 +63,21 @@ def _build_geojson(archive_path: Path, output_path: Path) -> dict[str, int]:
     if not zipfile.is_zipfile(archive_path):
         raise ValueError(f"Taxi zone boundary archive is not a ZIP file: {archive_path}")
 
-    zones = gpd.read_file(f"zip://{archive_path.resolve().as_posix()}")
+    with zipfile.ZipFile(archive_path) as archive:
+        vector_files = [
+            name
+            for name in archive.namelist()
+            if Path(name).suffix.casefold() in {".shp", ".geojson", ".json"}
+        ]
+    shapefiles = [name for name in vector_files if Path(name).suffix.casefold() == ".shp"]
+    data_sources = shapefiles or vector_files
+    if len(data_sources) != 1:
+        raise ValueError(
+            f"Expected one taxi zone shapefile or GeoJSON in {archive_path}, "
+            f"found {len(data_sources)}"
+        )
+
+    zones = gpd.read_file(f"zip://{archive_path.resolve().as_posix()}!{data_sources[0]}")
     if "LocationID" not in zones.columns:
         raise ValueError("Taxi zone boundaries do not include LocationID")
 
