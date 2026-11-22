@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: stg_taxi_zones
+    columns:
+      - name: location_id
+        data_tests:
+          - not_null
+          - unique
+      - name: borough
+        data_tests:
+          - not_null
+      - name: zone_name
+        data_tests:
+          - not_null
+
+  - name: mart_monthly
+    columns:
+      - name: month
+        data_tests:
+          - not_null
+          - unique
+      - name: trip_count
+        data_tests:
+          - not_null
+      - name: fee_reporting_status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [not_available, reported, partially_reported]
+
+  - name: mart_month_hour
+    columns:
+      - name: month
+        data_tests:
+          - not_null
+      - name: weekday
+        data_tests:
+          - not_null
+      - name: hour
+        data_tests:
+          - not_null
+      - name: trip_count
+        data_tests:
+          - not_null
+
+  - name: mart_zone_month
+    columns:
+      - name: location_id
+        data_tests:
+          - not_null
+      - name: zone_name
+        data_tests:
+          - not_null
+
+  - name: mart_quality_monthly
+    columns:
+      - name: month
+        data_tests:
+          - not_null
+          - unique
