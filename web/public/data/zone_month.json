@@ -1,0 +1,6 @@
+[
+  {"month":"2024-01","location_id":1,"borough":"Manhattan","zone_name":"Battery Park","trip_count":8200,"median_duration_minutes":12.4,"median_distance_miles":1.4},
+  {"month":"2024-01","location_id":2,"borough":"Brooklyn","zone_name":"DUMBO","trip_count":6100,"median_duration_minutes":13.9,"median_distance_miles":1.8},
+  {"month":"2025-01","location_id":1,"borough":"Manhattan","zone_name":"Battery Park","trip_count":7900,"median_duration_minutes":13.1,"median_distance_miles":1.4},
+  {"month":"2025-01","location_id":2,"borough":"Brooklyn","zone_name":"DUMBO","trip_count":6250,"median_duration_minutes":14.2,"median_distance_miles":1.8}
+]

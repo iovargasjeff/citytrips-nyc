@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "dataset_type": "sample",
+  "built_at": "2026-11-22T00:00:00+00:00",
+  "latest_month": "2025-02",
+  "source_month_count": 4,
+  "source_file_count": 4,
+  "source_total_rows": 16800000,
+  "published_months": ["2024-01", "2024-02", "2025-01", "2025-02"],
+  "files": [],
+  "source": {
+    "name": "NYC Taxi and Limousine Commission Yellow Taxi Trip Records",
+    "url": "https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page"
+  }
+}

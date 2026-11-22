@@ -1,0 +1,6 @@
+[
+  {"month":"2024-01","trip_count":49200,"active_days":31,"trips_per_calendar_day":1587.1,"median_duration_minutes":13.2,"p90_duration_minutes":29.7,"median_distance_miles":1.7,"reported_congestion_fee_total":null,"average_reported_congestion_fee":null,"fee_reporting_coverage":0,"fee_reporting_status":"not_available"},
+  {"month":"2024-02","trip_count":45800,"active_days":29,"trips_per_calendar_day":1579.3,"median_duration_minutes":13.5,"p90_duration_minutes":30.1,"median_distance_miles":1.8,"reported_congestion_fee_total":null,"average_reported_congestion_fee":null,"fee_reporting_coverage":0,"fee_reporting_status":"not_available"},
+  {"month":"2025-01","trip_count":47700,"active_days":31,"trips_per_calendar_day":1538.7,"median_duration_minutes":14.1,"p90_duration_minutes":31.3,"median_distance_miles":1.8,"reported_congestion_fee_total":32845,"average_reported_congestion_fee":0.75,"fee_reporting_coverage":0.92,"fee_reporting_status":"partially_reported"},
+  {"month":"2025-02","trip_count":46900,"active_days":28,"trips_per_calendar_day":1675,"median_duration_minutes":13.8,"p90_duration_minutes":30.9,"median_distance_miles":1.8,"reported_congestion_fee_total":35175,"average_reported_congestion_fee":0.75,"fee_reporting_coverage":1,"fee_reporting_status":"reported"}
+]

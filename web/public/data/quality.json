@@ -1,0 +1,6 @@
+[
+  {"month":"2024-01","source_rows":50000,"accepted_rows":49200,"rejected_rows":800,"missing_pickup_timestamp":14,"missing_dropoff_timestamp":18,"pickup_month_mismatch":41,"non_positive_duration":310,"duration_over_24_hours":15,"invalid_trip_distance":220,"unknown_pickup_zone":82,"unknown_dropoff_zone":100},
+  {"month":"2024-02","source_rows":46600,"accepted_rows":45800,"rejected_rows":800,"missing_pickup_timestamp":12,"missing_dropoff_timestamp":20,"pickup_month_mismatch":45,"non_positive_duration":301,"duration_over_24_hours":18,"invalid_trip_distance":210,"unknown_pickup_zone":90,"unknown_dropoff_zone":104},
+  {"month":"2025-01","source_rows":48500,"accepted_rows":47700,"rejected_rows":800,"missing_pickup_timestamp":11,"missing_dropoff_timestamp":18,"pickup_month_mismatch":39,"non_positive_duration":300,"duration_over_24_hours":19,"invalid_trip_distance":221,"unknown_pickup_zone":94,"unknown_dropoff_zone":98},
+  {"month":"2025-02","source_rows":47700,"accepted_rows":46900,"rejected_rows":800,"missing_pickup_timestamp":10,"missing_dropoff_timestamp":17,"pickup_month_mismatch":42,"non_positive_duration":302,"duration_over_24_hours":16,"invalid_trip_distance":225,"unknown_pickup_zone":90,"unknown_dropoff_zone":98}
+]

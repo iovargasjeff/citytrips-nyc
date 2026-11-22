@@ -1,0 +1,6 @@
+[
+  {"month":"2024-01","borough":"Manhattan","weekday":1,"hour":8,"trip_count":1250,"median_duration_minutes":14.1},
+  {"month":"2024-01","borough":"Brooklyn","weekday":1,"hour":8,"trip_count":480,"median_duration_minutes":16.3},
+  {"month":"2025-01","borough":"Manhattan","weekday":1,"hour":8,"trip_count":1320,"median_duration_minutes":14.9},
+  {"month":"2025-01","borough":"Brooklyn","weekday":1,"hour":8,"trip_count":510,"median_duration_minutes":16.7}
+]
