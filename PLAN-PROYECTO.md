@@ -6,7 +6,7 @@ Construiremos un producto público de ingeniería de datos con datos reales de v
 
 ## Alcance y decisiones
 
-- **Datos:** archivos mensuales Parquet desde enero de 2024, catálogo de zonas y límites geográficos oficiales. El flujo detecta los meses publicados en la página de TLC. Los datos de origen permanecen fuera de Git.
+- **Datos:** archivos mensuales Parquet desde enero de 2024, catálogo de zonas y límites geográficos oficiales. El flujo detecta los meses publicados en la página de TLC; si la página bloquea a Actions, verifica la secuencia mensual en los archivos públicos de CloudFront que TLC enlaza. Los datos de origen permanecen fuera de Git.
 - **Cambio de esquema real:** el campo `cbd_congestion_fee` no está presente en registros antiguos. La capa de preparación normaliza ambos esquemas. Un valor ausente se conserva como desconocido y se distingue de cero.
 - **Pipeline:** Python descarga y verifica archivos, dbt Core modela los datos y DuckDB ejecuta el almacén analítico. La salida pública contiene solamente agregados, métricas de calidad y geometrías de las zonas.
 - **Automatización y nube pública:** GitHub Actions ejecuta CI en los cambios y actualiza GitHub Pages en un horario mensual o bajo demanda. La aplicación es estática, pública por HTTPS y no requiere mantener una máquina virtual encendida.

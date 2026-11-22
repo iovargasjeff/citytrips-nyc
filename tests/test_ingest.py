@@ -1,11 +1,17 @@
 import hashlib
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pytest
 
-from citytrips.ingest import TripSource, download_trip_source, parse_trip_sources
+from citytrips.ingest import (
+    TripSource,
+    discover_cloudfront_sources,
+    download_trip_source,
+    parse_trip_sources,
+)
 
 
 def test_parse_trip_sources_sorts_and_deduplicates_catalog_links() -> None:
@@ -28,6 +34,39 @@ def test_parse_trip_sources_respects_start_year() -> None:
     html = '<a href="https://data.example/yellow_tripdata_2025-01.parquet">January</a>'
 
     assert parse_trip_sources(html, start_year=2026) == []
+
+
+def test_cloudfront_discovery_finds_latest_month_and_verifies_history(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    latest_month = "2025-03"
+
+    def fake_metadata(url: str) -> dict[str, str | int | bool | None]:
+        month = url.rsplit("_", maxsplit=1)[1].removesuffix(".parquet")
+        return {"available": month <= latest_month, "etag": f'"{month}"'}
+
+    monkeypatch.setattr("citytrips.ingest._remote_metadata", fake_metadata)
+
+    sources = discover_cloudfront_sources(
+        start_year=2025,
+        today=datetime(2025, 5, 10, tzinfo=UTC),
+    )
+
+    assert [source.month for source in sources] == ["2025-01", "2025-02", "2025-03"]
+    assert sources[-1].remote_metadata == {"available": True, "etag": '"2025-03"'}
+
+
+def test_cloudfront_discovery_fails_on_gap_in_published_months(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_metadata(url: str) -> dict[str, str | int | bool | None]:
+        month = url.rsplit("_", maxsplit=1)[1].removesuffix(".parquet")
+        return {"available": month != "2025-02"}
+
+    monkeypatch.setattr("citytrips.ingest._remote_metadata", fake_metadata)
+
+    with pytest.raises(RuntimeError, match="2025-02 is missing"):
+        discover_cloudfront_sources(start_year=2025, today=datetime(2025, 3, 10, tzinfo=UTC))
 
 
 def test_download_trip_source_records_parquet_metadata(

@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup
 TLC_PAGE_URL = "https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page"
 TAXI_ZONE_LOOKUP_URL = "https://d37ci6vzurychx.cloudfront.net/misc/taxi_zone_lookup.csv"
 TAXI_ZONES_ARCHIVE_URL = "https://d37ci6vzurychx.cloudfront.net/misc/taxi_zones.zip"
+TAXI_TRIP_DATA_BASE_URL = "https://d37ci6vzurychx.cloudfront.net/trip-data"
 TRIP_FILE_PATTERN = re.compile(r"yellow_tripdata_(\d{4})-(\d{2})\.parquet$", re.IGNORECASE)
 
 
@@ -29,6 +30,7 @@ TRIP_FILE_PATTERN = re.compile(r"yellow_tripdata_(\d{4})-(\d{2})\.parquet$", re.
 class TripSource:
     month: str
     url: str
+    remote_metadata: dict[str, str | int | bool | None] | None = None
 
 
 @dataclass(frozen=True)
@@ -74,24 +76,76 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _remote_metadata(url: str) -> dict[str, str | int | None]:
+def _remote_metadata(url: str) -> dict[str, str | int | bool | None]:
     """Read HTTP validators to reuse unchanged source files from a restored cache."""
     try:
         response = requests.head(url, allow_redirects=True, timeout=(15, 60))
-        if response.status_code in {403, 405, 501}:
-            return {}
+        if response.status_code in {403, 405, 410, 501}:
+            return {"available": None}
+        if response.status_code == 404:
+            return {"available": False}
         response.raise_for_status()
     except requests.RequestException:
-        return {}
+        return {"available": None}
 
     content_length = response.headers.get("Content-Length")
     return {
+        "available": True,
         "etag": response.headers.get("ETag"),
         "last_modified": response.headers.get("Last-Modified"),
         "size_bytes": int(content_length)
         if content_length and content_length.isdecimal()
         else None,
     }
+
+
+def discover_cloudfront_sources(
+    start_year: int = 2024,
+    *,
+    today: datetime | None = None,
+) -> list[TripSource]:
+    """Find TLC's newest published month, then verify every intervening source month."""
+    current = today or datetime.now(UTC)
+    candidate_year, candidate_month = current.year, current.month
+    latest_month: str | None = None
+    latest_metadata: dict[str, str | int | bool | None] | None = None
+
+    for _ in range(12):
+        month = f"{candidate_year:04d}-{candidate_month:02d}"
+        url = f"{TAXI_TRIP_DATA_BASE_URL}/yellow_tripdata_{month}.parquet"
+        metadata = _remote_metadata(url)
+        if metadata.get("available") is True:
+            latest_month = month
+            latest_metadata = metadata
+            break
+        candidate_month -= 1
+        if candidate_month == 0:
+            candidate_year -= 1
+            candidate_month = 12
+
+    if latest_month is None or latest_metadata is None:
+        raise RuntimeError("Could not locate a published TLC yellow taxi month on CloudFront")
+    if int(latest_month[:4]) < start_year:
+        return []
+
+    year, month_number = start_year, 1
+    months: list[str] = []
+    while f"{year:04d}-{month_number:02d}" <= latest_month:
+        months.append(f"{year:04d}-{month_number:02d}")
+        month_number += 1
+        if month_number == 13:
+            year += 1
+            month_number = 1
+
+    sources: list[TripSource] = []
+    for month in months:
+        url = f"{TAXI_TRIP_DATA_BASE_URL}/yellow_tripdata_{month}.parquet"
+        metadata = latest_metadata if month == latest_month else _remote_metadata(url)
+        if metadata.get("available") is False:
+            raise RuntimeError(f"TLC source month {month} is missing before {latest_month}")
+        sources.append(TripSource(month=month, url=url, remote_metadata=metadata))
+
+    return sources
 
 
 def _download_to_path(url: str, destination: Path, timeout: tuple[int, int]) -> None:
@@ -151,7 +205,7 @@ def download_trip_source(
     previous_record: dict[str, Any] | None = None,
 ) -> DownloadRecord:
     path = raw_dir / f"yellow_tripdata_{source.month}.parquet"
-    remote = _remote_metadata(source.url)
+    remote = source.remote_metadata or _remote_metadata(source.url)
     validators = ("etag", "last_modified", "size_bytes")
     comparable_validators = [
         key
@@ -207,9 +261,18 @@ def refresh_sources(
     force_download: bool = False,
 ) -> dict[str, Any]:
     """Fetch the published source window and record a complete, checksum-based manifest."""
-    response = requests.get(page_url, timeout=(15, 60))
-    response.raise_for_status()
-    sources = parse_trip_sources(response.text, start_year=start_year)
+    discovery_method = "tlc_catalog_page"
+    try:
+        response = requests.get(page_url, timeout=(15, 60))
+        response.raise_for_status()
+        sources = parse_trip_sources(response.text, start_year=start_year)
+    except requests.RequestException as error:
+        print(f"TLC catalog page unavailable ({error}); probing its public CloudFront files.")
+        sources = []
+
+    if not sources:
+        sources = discover_cloudfront_sources(start_year=start_year)
+        discovery_method = "cloudfront_head_probe"
     if not sources:
         raise RuntimeError(f"No yellow taxi Parquet files from {start_year} onward were found")
 
@@ -255,6 +318,7 @@ def refresh_sources(
         "schema_version": 1,
         "built_at": datetime.now(UTC).isoformat(),
         "catalog_url": page_url,
+        "discovery_method": discovery_method,
         "start_year": start_year,
         "source_months": sorted(record.month for record in records),
         "files": [asdict(record) for record in sorted(records, key=lambda record: record.month)],

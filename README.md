@@ -18,7 +18,7 @@ flowchart LR
     WEB --> PAGES
 ```
 
-Raw Parquet files are downloaded into the workflow workspace and are never committed. The scheduled workflow restores verified source files from the Actions cache, checks upstream HTTP validators and SHA-256, then downloads only new or changed months. A cache miss or unsupported HTTP validators safely falls back to downloading the source. The public site contains only monthly and zone-level aggregates, quality results, and taxi zone boundaries. If ingestion, a data test, or the site build fails, Pages receives no new version and the last successful dashboard remains available.
+Raw Parquet files are downloaded into the workflow workspace and are never committed. Ingestion reads the TLC data page and, when that page blocks an automation runner, discovers the latest month from the same public CloudFront files linked by TLC. It checks the complete month sequence before processing. The scheduled workflow restores source files from the Actions cache, checks upstream HTTP validators and SHA-256, then downloads only new or changed months. A cache miss or unsupported validators safely falls back to downloading the source. The public site contains only monthly and zone-level aggregates, quality results, and taxi zone boundaries. If ingestion, a data test, or the site build fails, Pages receives no new version and the last successful dashboard remains available.
 
 ## Local development
 
