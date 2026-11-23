@@ -1,4 +1,4 @@
-# De 123 millones de viajes a un producto de datos reproducible: CityTrips NYC con Python, dbt y DuckDB
+## De 123 millones de viajes a un producto de datos reproducible: CityTrips NYC con Python, dbt y DuckDB
 
 Construir un gráfico a partir de un archivo grande suele ser la parte fácil. El trabajo de ingeniería aparece después: identificar cuál es la publicación más reciente, detectar un mes ausente, distinguir un campo que todavía no existía de un valor cero, explicar las filas descartadas y evitar que una ejecución incompleta reemplace una versión pública válida.
 
