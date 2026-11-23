@@ -19,5 +19,6 @@ warehouse/.user.yml
 web/node_modules/
 web/dist/
 web/coverage/
+/deliverables/
 .DS_Store
 Thumbs.db

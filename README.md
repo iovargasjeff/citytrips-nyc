@@ -65,8 +65,14 @@ TLC publishes monthly Parquet trip records and the taxi zone lookup and boundary
 
 - Repository: https://github.com/iovargasjeff/citytrips-nyc
 - Dashboard: https://iovargasjeff.github.io/citytrips-nyc/
-- Technical articles: team members publish individually and add their links here
-- Construction video: publish after recording, then add its link here
+- [Technical article draft for individual adaptation](docs/articulo-dev-es.md)
+- [Spanish construction-video script and scene plan](docs/guion-video-es.md)
+- Construction video: rendered locally at 1920×1080; add the public platform URL after publication
+
+The video can be re-rendered on Windows with Pillow, FFmpeg/FFprobe and an installed Spanish
+System.Speech voice: `py -m pip install Pillow`, then `py tools/render_video.py` from the project
+root. Generated media is kept in the ignored `deliverables/` directory and is not added to the
+source repository.
 
 ## License
 

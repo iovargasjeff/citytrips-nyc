@@ -9,4 +9,15 @@ export default defineConfig({
     setupFiles: './src/test/setup.ts',
     css: true,
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('/node_modules/zrender/') || id.includes('\\node_modules\\zrender\\')) {
+            return 'zrender'
+          }
+        },
+      },
+    },
+  },
 })
