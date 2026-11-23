@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Ingesta idempotente y verificable</title>
+  <desc id="desc">Seis etapas para descubrir meses, descargar temporalmente, validar datos, verificar caché y checksum, guardar el manifiesto y detener publicación ante un error.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52716d"/></marker><style>
+    text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#172a35}.eyebrow{font-size:15px;font-weight:700;letter-spacing:2px;fill:#16877c}.title{font-size:34px;font-weight:750}.sub{font-size:17px;fill:#52616b}.num{font-size:16px;font-weight:750;fill:#fff}.head{font-size:19px;font-weight:700}.body{font-size:14px;fill:#435761}.small{font-size:13px;fill:#52616b}.box{fill:#fff;stroke:#d6e2de;stroke-width:2}.line{stroke:#52716d;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style></defs>
+  <rect width="1440" height="760" fill="#f5f8f6"/>
+  <text x="64" y="58" class="eyebrow">CITYTRIPS NYC · INGESTA Y PROCEDENCIA</text>
+  <text x="64" y="108" class="title">Un archivo solo se acepta después de comprobarlo</text>
+  <text x="64" y="141" class="sub">La caché acelera el refresh; nunca sustituye la verificación del origen.</text>
+  <g transform="translate(64 205)">
+    <rect width="390" height="178" rx="18" class="box"/><circle cx="37" cy="39" r="22" fill="#1d9285"/><text x="32" y="45" class="num">1</text><text x="74" y="45" class="head">Descubrir publicación</text><text x="28" y="88" class="body">Leer el catálogo TLC y extraer nombres de Parquet.</text><text x="28" y="114" class="body">Si el catálogo falla, sondear el mirror oficial</text><text x="28" y="140" class="body">en CloudFront, mes por mes.</text>
+  </g>
+  <g transform="translate(524 205)">
+    <rect width="390" height="178" rx="18" class="box"/><circle cx="37" cy="39" r="22" fill="#1d9285"/><text x="32" y="45" class="num">2</text><text x="74" y="45" class="head">Cerrar huecos de calendario</text><text x="28" y="88" class="body">Construir la secuencia mensual esperada desde 2024.</text><text x="28" y="114" class="body">Un mes ausente detiene el refresh: publicar un</text><text x="28" y="140" class="body">hueco como si fuera un cero sería engañoso.</text>
+  </g>
+  <g transform="translate(984 205)">
+    <rect width="390" height="178" rx="18" class="box"/><circle cx="37" cy="39" r="22" fill="#1d9285"/><text x="32" y="45" class="num">3</text><text x="74" y="45" class="head">Revalidar caché</text><text x="28" y="88" class="body">Comparar URL y validadores HTTP disponibles</text><text x="28" y="114" class="body">(ETag, Last-Modified, tamaño). Verificar el SHA-256</text><text x="28" y="140" class="body">local antes de reutilizar un Parquet existente.</text>
+  </g>
+  <path d="M454 294 H512" class="line"/><path d="M914 294 H972" class="line"/>
+  <g transform="translate(64 438)">
+    <rect width="390" height="178" rx="18" class="box"/><circle cx="37" cy="39" r="22" fill="#4376a1"/><text x="32" y="45" class="num">4</text><text x="74" y="45" class="head">Descargar a .part</text><text x="28" y="88" class="body">Stream por bloques y reintentos limitados.</text><text x="28" y="114" class="body">Un fallo limpia el temporal; el nombre final</text><text x="28" y="140" class="body">no se reserva para bytes incompletos.</text>
+  </g>
+  <g transform="translate(524 438)">
+    <rect width="390" height="178" rx="18" class="box"/><circle cx="37" cy="39" r="22" fill="#4376a1"/><text x="32" y="45" class="num">5</text><text x="74" y="45" class="head">Validar antes de promover</text><text x="28" y="88" class="body">Leer metadatos Parquet, filas, columnas y checksum.</text><text x="28" y="114" class="body">Verificar ZIP de geometrías y descargar el lookup</text><text x="28" y="140" class="body">de zonas con checksums propios.</text>
+  </g>
+  <g transform="translate(984 438)">
+    <rect width="390" height="178" rx="18" class="box"/><circle cx="37" cy="39" r="22" fill="#4376a1"/><text x="32" y="45" class="num">6</text><text x="74" y="45" class="head">Promover + dejar evidencia</text><text x="28" y="88" class="body">Reemplazo atómico del archivo y manifiesto JSON</text><text x="28" y="114" class="body">con mes, URL, filas, columnas, bytes, ETag</text><text x="28" y="140" class="body">y SHA-256 para reproducir el snapshot.</text>
+  </g>
+  <path d="M1374 294 C1405 294 1405 527 1384 527" class="line"/><path d="M984 527 H922" class="line"/><path d="M524 527 H462" class="line"/>
+  <rect x="279" y="671" width="882" height="48" rx="24" fill="#fbeadf" stroke="#efc6ab"/><text x="343" y="701" class="head" style="font-size:16px;fill:#8b4a26">Cualquier error de descarga o validación bloquea dbt y conserva la versión pública anterior.</text>
+</svg>

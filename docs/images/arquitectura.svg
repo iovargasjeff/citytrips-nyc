@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">Arquitectura de CityTrips NYC</title>
+  <desc id="desc">Flujo batch desde la TLC, por ingesta Python, dbt y DuckDB, hasta artefactos estáticos y un dashboard público en GitHub Pages.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52716d"/></marker>
+    <style>
+      text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#172a35}.eyebrow{font-size:15px;font-weight:700;letter-spacing:2px;fill:#16877c}.title{font-size:34px;font-weight:750}.subtitle{font-size:17px;fill:#52616b}.label{font-size:14px;font-weight:700;letter-spacing:1px;fill:#667881}.head{font-size:22px;font-weight:700}.body{font-size:15px;fill:#435761}.small{font-size:13px;fill:#52616b}.box{fill:#fff;stroke:#d6e2de;stroke-width:2}.card{filter:none}.arrow{stroke:#52716d;stroke-width:3;fill:none;marker-end:url(#arrow)}.pill{fill:#e2f4ef;stroke:#b9e6d9;stroke-width:1}.pilltext{font-size:13px;font-weight:700;fill:#176d64}.footer{font-size:15px;font-weight:650;fill:#29434a}
+    </style>
+  </defs>
+  <rect width="1440" height="820" fill="#f5f8f6"/>
+  <text x="62" y="54" class="eyebrow">CITYTRIPS NYC · SISTEMA DE DATOS</text>
+  <text x="62" y="101" class="title">De una fuente mensual a una interfaz pública</text>
+  <text x="62" y="133" class="subtitle">Batch reproducible: controlamos procedencia y calidad antes de reemplazar el sitio.</text>
+
+  <text x="72" y="202" class="label">FUENTE PÚBLICA</text>
+  <text x="326" y="202" class="label">ORQUESTACIÓN</text>
+  <text x="602" y="202" class="label">INGESTA Y ALMACÉN ANALÍTICO</text>
+  <text x="1094" y="202" class="label">PRODUCTO</text>
+
+  <rect x="62" y="226" width="208" height="248" rx="18" class="box card"/>
+  <rect x="62" y="226" width="208" height="10" rx="5" fill="#1d9285"/>
+  <text x="84" y="273" class="head">NYC TLC</text>
+  <text x="84" y="311" class="body">Yellow Taxi</text>
+  <text x="84" y="336" class="body">Parquet mensual</text>
+  <text x="84" y="361" class="body">Lookup de zonas</text>
+  <text x="84" y="386" class="body">Límites geográficos</text>
+  <rect x="84" y="418" width="158" height="32" rx="16" class="pill"/>
+  <text x="99" y="439" class="pilltext">33 meses · fuente TLC</text>
+
+  <rect x="314" y="226" width="222" height="248" rx="18" class="box card"/>
+  <rect x="314" y="226" width="222" height="10" rx="5" fill="#627f7a"/>
+  <text x="338" y="273" class="head">GitHub Actions</text>
+  <text x="338" y="311" class="body">Ejecución mensual</text>
+  <text x="338" y="336" class="body">y disparo manual</text>
+  <text x="338" y="376" class="body">Caché de fuente</text>
+  <text x="338" y="401" class="body">y control de CI</text>
+  <rect x="338" y="418" width="174" height="32" rx="16" class="pill"/>
+  <text x="357" y="439" class="pilltext">falla ⇒ no publica</text>
+
+  <rect x="580" y="226" width="224" height="248" rx="18" class="box card"/>
+  <rect x="580" y="226" width="224" height="10" rx="5" fill="#4376a1"/>
+  <text x="604" y="273" class="head">Python</text>
+  <text x="604" y="311" class="body">Descubre meses</text>
+  <text x="604" y="336" class="body">Valida secuencia</text>
+  <text x="604" y="361" class="body">Parquet + SHA-256</text>
+  <text x="604" y="386" class="body">Manifiesto trazable</text>
+  <rect x="604" y="418" width="174" height="32" rx="16" class="pill"/>
+  <text x="625" y="439" class="pilltext">datos crudos privados</text>
+
+  <rect x="848" y="226" width="220" height="248" rx="18" class="box card"/>
+  <rect x="848" y="226" width="220" height="10" rx="5" fill="#8a6cad"/>
+  <text x="872" y="273" class="head">dbt + DuckDB</text>
+  <text x="872" y="311" class="body">Staging tipado</text>
+  <text x="872" y="336" class="body">Hechos y reglas</text>
+  <text x="872" y="361" class="body">Marts analíticos</text>
+  <text x="872" y="386" class="body">Tests y conciliación</text>
+  <rect x="872" y="418" width="172" height="32" rx="16" class="pill"/>
+  <text x="891" y="439" class="pilltext">solo publica si pasa</text>
+
+  <rect x="1110" y="226" width="266" height="248" rx="18" class="box card"/>
+  <rect x="1110" y="226" width="266" height="10" rx="5" fill="#df9f3b"/>
+  <text x="1134" y="273" class="head">GitHub Pages</text>
+  <text x="1134" y="311" class="body">Dashboard React</text>
+  <text x="1134" y="336" class="body">JSON agregado</text>
+  <text x="1134" y="361" class="body">GeoJSON simplificado</text>
+  <text x="1134" y="386" class="body">Manifiesto público</text>
+  <rect x="1134" y="418" width="216" height="32" rx="16" class="pill"/>
+  <text x="1152" y="439" class="pilltext">sin filas por viaje</text>
+
+  <path d="M270 350 H306" class="arrow"/><path d="M536 350 H572" class="arrow"/><path d="M804 350 H840" class="arrow"/><path d="M1068 350 H1102" class="arrow"/>
+  <path d="M425 216 C425 176 691 176 691 216" class="arrow"/>
+  <text x="472" y="171" class="small">schedule / dispatch</text>
+
+  <rect x="62" y="536" width="1314" height="199" rx="18" fill="#eaf1ee" stroke="#d4e1dc" stroke-width="2"/>
+  <text x="91" y="578" class="label">ARTEFACTOS QUE CRUZAN LA FRONTERA PÚBLICA</text>
+  <rect x="91" y="604" width="214" height="76" rx="12" fill="#fff" stroke="#d6e2de"/>
+  <text x="111" y="635" class="head" style="font-size:18px">monthly.json</text><text x="111" y="658" class="small">tendencia y KPIs</text>
+  <rect x="324" y="604" width="234" height="76" rx="12" fill="#fff" stroke="#d6e2de"/>
+  <text x="344" y="635" class="head" style="font-size:18px">monthly_hour.json</text><text x="344" y="658" class="small">mes · distrito · día · hora</text>
+  <rect x="577" y="604" width="220" height="76" rx="12" fill="#fff" stroke="#d6e2de"/>
+  <text x="597" y="635" class="head" style="font-size:18px">zone_month.json</text><text x="597" y="658" class="small">demanda por zona</text>
+  <rect x="816" y="604" width="204" height="76" rx="12" fill="#fff" stroke="#d6e2de"/>
+  <text x="836" y="635" class="head" style="font-size:18px">quality.json</text><text x="836" y="658" class="small">conteos conciliados</text>
+  <rect x="1039" y="604" width="299" height="76" rx="12" fill="#fff" stroke="#d6e2de"/>
+  <text x="1059" y="635" class="head" style="font-size:18px">taxi_zones.geojson + manifest</text><text x="1059" y="658" class="small">geometrías ligeras y linaje de fuente</text>
+  <text x="92" y="711" class="footer">El Parquet se procesa en el runner; la web pública recibe vistas agregadas versionadas.</text>
+</svg>

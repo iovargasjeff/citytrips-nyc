@@ -65,7 +65,7 @@ TLC publishes monthly Parquet trip records and the taxi zone lookup and boundary
 
 - Repository: https://github.com/iovargasjeff/citytrips-nyc
 - Dashboard: https://iovargasjeff.github.io/citytrips-nyc/
-- [Technical article draft for individual adaptation](docs/articulo-dev-es.md)
+- [Extended Spanish technical article with architecture diagrams and dashboard screenshots](docs/articulo-dev-es.md)
 - [Spanish construction-video script and scene plan](docs/guion-video-es.md)
 - Construction video: rendered locally at 1920×1080; add the public platform URL after publication
 

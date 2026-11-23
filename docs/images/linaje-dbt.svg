@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="820" viewBox="0 0 1440 820" role="img" aria-labelledby="title desc">
+  <title id="title">Linaje y granos del warehouse dbt</title>
+  <desc id="desc">Capas de staging, intermediate y marts analíticos con pruebas de reconciliación de filas y tratamiento nulo del campo de congestión.</desc>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#52716d"/></marker><style>
+    text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#172a35}.eyebrow{font-size:15px;font-weight:700;letter-spacing:2px;fill:#16877c}.title{font-size:34px;font-weight:750}.sub{font-size:17px;fill:#52616b}.label{font-size:13px;font-weight:700;letter-spacing:1px;fill:#667881}.head{font-size:19px;font-weight:700}.body{font-size:14px;fill:#435761}.small{font-size:13px;fill:#52616b}.box{fill:#fff;stroke:#d6e2de;stroke-width:2}.line{stroke:#52716d;stroke-width:3;fill:none;marker-end:url(#arrow)}
+  </style></defs>
+  <rect width="1440" height="820" fill="#f5f8f6"/>
+  <text x="64" y="58" class="eyebrow">CITYTRIPS NYC · WAREHOUSE Y CONTRATOS</text>
+  <text x="64" y="108" class="title">El grano se hace explícito en cada capa</text>
+  <text x="64" y="141" class="sub">dbt transforma y prueba las relaciones; DuckDB ejecuta los modelos sobre Parquet local.</text>
+  <text x="70" y="205" class="label">FUENTES</text><text x="341" y="205" class="label">STAGING</text><text x="646" y="205" class="label">INTERMEDIATE</text><text x="966" y="205" class="label">MARTS · GRANOS DE CONSUMO</text>
+  <rect x="64" y="232" width="218" height="105" rx="16" class="box"/><text x="87" y="271" class="head">Yellow trips</text><text x="87" y="299" class="body">Parquet por mes</text><text x="87" y="321" class="small">grano: un viaje</text>
+  <rect x="64" y="373" width="218" height="105" rx="16" class="box"/><text x="87" y="412" class="head">Taxi zones</text><text x="87" y="440" class="body">lookup + geometrías</text><text x="87" y="462" class="small">grano: una zona</text>
+  <rect x="324" y="232" width="250" height="246" rx="16" fill="#e9f3f0" stroke="#bfdad2" stroke-width="2"/><text x="350" y="273" class="head">stg_yellow_trips</text><text x="350" y="311" class="body">renombrar columnas</text><text x="350" y="339" class="body">normalizar tipos</text><text x="350" y="367" class="body">añadir source_month</text><text x="350" y="395" class="body">fee ausente ⇒ NULL</text><text x="350" y="442" class="small">no inventar un cero</text>
+  <rect x="324" y="514" width="250" height="100" rx="16" fill="#e9f3f0" stroke="#bfdad2" stroke-width="2"/><text x="350" y="553" class="head">stg_taxi_zones</text><text x="350" y="583" class="body">IDs y nombres canónicos</text>
+  <rect x="615" y="291" width="276" height="224" rx="16" fill="#eef0f8" stroke="#cdd2e7" stroke-width="2"/><text x="641" y="334" class="head">int_yellow_trips</text><text x="641" y="374" class="body">unir nombres de zona</text><text x="641" y="402" class="body">calcular duración</text><text x="641" y="430" class="body">clasificar motivo de rechazo</text><text x="641" y="475" class="small">grano: un viaje enriquecido</text>
+  <rect x="936" y="220" width="434" height="92" rx="15" class="box"/><text x="962" y="258" class="head">mart_monthly</text><text x="962" y="285" class="body">mes · demanda, duración, distancia y cobertura de tarifa</text>
+  <rect x="936" y="330" width="434" height="92" rx="15" class="box"/><text x="962" y="368" class="head">mart_month_hour</text><text x="962" y="395" class="body">mes · distrito · día de semana · hora</text>
+  <rect x="936" y="440" width="434" height="92" rx="15" class="box"/><text x="962" y="478" class="head">mart_zone_month</text><text x="962" y="505" class="body">mes · location_id · nombre · viajes</text>
+  <rect x="936" y="550" width="434" height="92" rx="15" class="box"/><text x="962" y="588" class="head">mart_quality_monthly</text><text x="962" y="615" class="body">mes · source_rows · accepted_rows · rejected_rows</text>
+  <path d="M282 283 H316" class="line"/><path d="M282 425 C300 425 300 566 316 566" class="line"/><path d="M574 352 H607" class="line"/><path d="M574 560 C596 560 590 475 607 475" class="line"/>
+  <path d="M891 334 C914 334 914 266 928 266" class="line"/><path d="M891 365 H928" class="line"/><path d="M891 410 C914 410 914 476 928 476" class="line"/><path d="M891 458 C914 458 914 586 928 586" class="line"/>
+  <rect x="64" y="682" width="1306" height="82" rx="15" fill="#fff7e7" stroke="#ead7ad" stroke-width="2"/><text x="91" y="717" class="head" style="font-size:17px">Contrato de reconciliación</text><text x="91" y="744" class="body">por mes: filas fuente = filas aceptadas + filas rechazadas. Las pruebas también controlan claves, fechas, rangos y unicidad del grano.</text>
+</svg>
