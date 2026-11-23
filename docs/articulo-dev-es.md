@@ -1,7 +1,5 @@
 # De 123 millones de viajes a un tablero público: un pipeline de datos reproducible con Python, dbt y DuckDB
 
-> Borrador para publicación individual en DEV Community, Medium o Hashnode. Sustituye la línea de autor por el nombre de quien publique y revisa el apartado “Qué aprendí” para que describa su contribución real.
-
 ¿Cómo se convierte una colección de archivos Parquet de varios gigabytes en una historia que una persona pueda explorar en el navegador? Para responderlo construimos CityTrips NYC: una solución abierta que toma registros de taxis amarillos de la NYC Taxi and Limousine Commission (TLC), los transforma con dbt y DuckDB y publica un tablero estático en GitHub Pages.
 
 La versión desplegada cubre 33 meses, de enero de 2024 a septiembre de 2026. Los archivos de origen suman 123,471,721 filas. El tablero presenta tendencias, actividad por hora y día, orígenes por zona TLC y controles de calidad. La idea técnica central es mantener una ruta de datos reproducible y publicar únicamente agregados, nunca las filas individuales del viaje.
@@ -87,9 +85,11 @@ El mayor límite es la escala temporal del proceso: una recarga completa tarda m
 
 Antes de interpretar los indicadores, revisa la fecha de corte, los meses publicados y la cobertura de cada columna. En particular, “sin dato” no es sinónimo de cero y una correlación temporal no demuestra causalidad.
 
-## Qué aprendí
+## Conclusión
 
-> Reemplaza este bloque con una reflexión propia: qué parte implementaste, qué fallo concreto encontraste y cómo lo verificaste. Cada integrante del equipo debe publicar desde su propia cuenta y no copiar este párrafo sin personalizarlo.
+CityTrips NYC conecta procedencia, modelos analíticos, controles de calidad y visualización en una ruta que se puede volver a ejecutar. La lección más útil del proyecto es concreta: un agregado atractivo solo merece confianza cuando el equipo puede explicar qué archivos lo generaron, cómo cambió su esquema y qué registros quedaron fuera. El manifiesto, las pruebas de dbt y el despliegue condicionado hacen visible esa evidencia junto con el dashboard.
+
+El repositorio deja una base reproducible para adaptar el mismo patrón a otra fuente mensual: detectar publicaciones, validar archivos, modelar con tests y servir una salida pequeña desde una página pública.
 
 ## Referencias
 
