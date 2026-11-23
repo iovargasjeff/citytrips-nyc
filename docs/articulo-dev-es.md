@@ -1,5 +1,3 @@
-## De 123 millones de viajes a un producto de datos reproducible: CityTrips NYC con Python, dbt y DuckDB
-
 Construir un gráfico a partir de un archivo grande suele ser la parte fácil. El trabajo de ingeniería aparece después: identificar cuál es la publicación más reciente, detectar un mes ausente, distinguir un campo que todavía no existía de un valor cero, explicar las filas descartadas y evitar que una ejecución incompleta reemplace una versión pública válida.
 
 CityTrips NYC resuelve ese recorrido para los registros mensuales de taxis amarillos de la NYC Taxi and Limousine Commission (TLC). Un pipeline en Python descarga y verifica archivos Parquet; dbt y DuckDB normalizan y agregan los datos; GitHub Actions ejecuta controles y reconstruye el producto; una interfaz React publica únicamente JSON agregado y geometrías GeoJSON simplificadas en GitHub Pages.
@@ -29,7 +27,7 @@ Estas preguntas llevan a una arquitectura batch, con un warehouse efímero de Du
 
 El flujo empieza con los Parquet mensuales y los archivos de catálogo geográfico de TLC. Python descubre la ventana de datos, descarga y verifica fuentes. Después ejecuta `dbt build` contra DuckDB, que genera modelos analíticos y corre sus pruebas. La aplicación exporta los marts como JSON, simplifica los límites de zonas a GeoJSON y construye una web estática. GitHub Pages sirve esa web; el runner conserva los archivos de origen en su espacio de trabajo y en la caché de Actions, pero esos Parquet no se incluyen en el sitio.
 
-![Diagrama de arquitectura de extremo a extremo de CityTrips NYC](https://raw.githubusercontent.com/iovargasjeff/citytrips-nyc/main/docs/images/arquitectura.svg)
+![Diagrama de arquitectura de extremo a extremo de CityTrips NYC](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/srestyugln02rjakk1cv.png)
 
 La frontera entre warehouse y frontend es importante. El navegador no consulta DuckDB, no descarga los viajes individuales y no necesita credenciales para acceder a una API. Recibe cinco productos acotados: `monthly.json`, `monthly_hour.json`, `zone_month.json`, `quality.json` y `taxi_zones.geojson`; el manifiesto público añade el corte temporal, el número de archivos y los datos de procedencia. Esta forma permite servir el dashboard desde un host estático y reduce la superficie operativa del producto.
 
@@ -51,7 +49,7 @@ La capa de ingesta está escrita en Python porque aquí importan tanto las solic
 
 Cada Parquet se transmite a un archivo temporal `.part`, en bloques de 1 MiB, con tres intentos máximos. Antes de promoverlo al nombre final, Arrow lee los metadatos del Parquet. Si el proceso se interrumpe, se borra el temporal. Cuando la validación pasa, `os.replace` efectúa el cambio de nombre atómico. El manifiesto también se escribe primero a un temporal y después se reemplaza; así no queda un JSON truncado presentado como evidencia válida.
 
-![Etapas de ingesta, verificación y promoción atómica](https://raw.githubusercontent.com/iovargasjeff/citytrips-nyc/main/docs/images/ingesta.svg)
+![Etapas de ingesta, verificación y promoción atómica](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/808xtpfpjk0r4knze27z.png)
 
 El caché de Actions reduce descargas, pero no se acepta por su mera existencia. Para reutilizar una copia se comprueba que coincida la URL y que los validadores remotos disponibles —ETag, `Last-Modified` o tamaño— coincidan con el manifiesto previo. Además, se vuelve a calcular el SHA-256 local y se compara con el checksum registrado. Si no hay validadores comparables, cambió la fuente, falta el archivo o falla la suma de comprobación, se descarga de nuevo. Esta regla es más costosa que “si existe, úsalo”, pero evita convertir una caché antigua o dañada en una fuente de verdad.
 
@@ -75,7 +73,7 @@ DuckDB lee y transforma Parquet dentro del runner; dbt organiza las relaciones, 
 - **Intermediate:** enriquece cada viaje con borough y nombre de zona, calcula duración y asigna un motivo de rechazo o `NULL` cuando pasa las reglas.
 - **Marts:** agregan los hechos al grano que necesita cada vista: mes, mes/distrito/día/hora, mes/zona y mes/calidad.
 
-![Linaje de modelos dbt, granos y contratos de calidad](https://raw.githubusercontent.com/iovargasjeff/citytrips-nyc/main/docs/images/linaje-dbt.svg)
+![Linaje de modelos dbt, granos y contratos de calidad](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/507sduze114y7757fqjf.png)
 
 El grano se documenta porque una tabla sin una clave clara puede duplicar cifras durante una unión. `mart_zone_month`, por ejemplo, debe tener una sola fila por combinación de mes y `location_id`; `mart_monthly`, una fila por mes. Los tests comprueban unicidad y valores no nulos donde corresponde. En `mart_month_hour`, el nivel de detalle incluye mes, borough, día de semana y hora, por lo que esperar una sola fila por mes sería una prueba incorrecta.
 
@@ -95,7 +93,7 @@ En el snapshot completo, 122,490,358 de 123,471,721 filas quedaron aceptadas y 9
 
 Para septiembre de 2026, la tabla registra 3,876,044 filas de origen, 3,827,802 aceptadas y 48,242 rechazadas. La igualdad se sostiene y hace que el resumen mensual sea auditable. La tasa mensual puede cambiar por comportamiento del origen, por el esquema o por el umbral de una regla; revisar la tendencia es más útil que mirar un solo porcentaje. Si se modifica el contrato, conviene anotar la versión de la regla y evaluar el efecto de forma retrospectiva.
 
-![Vista de calidad con filas de origen, aceptadas, rechazadas y manifiesto](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/bikmd209v05c0e32k3p0.png)
+![Vista de calidad con filas de origen, aceptadas, rechazadas y manifiesto](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/9pxusmtyvcivin91wncl.jpeg)
 
 La captura complementa, pero no reemplaza, el test. La prueba impide publicar cuando no se reconcilian los conteos; la pantalla ayuda a una persona a revisar qué ocurrió por mes y cuándo se construyó el snapshot. Son controles diferentes: uno automático y binario, otro exploratorio y contextual.
 
@@ -119,7 +117,7 @@ El repositorio usa dos rutas. CI se ejecuta en cambios de `main` y pull requests
 
 El workflow de publicación puede dispararse manualmente y también se programa para el día 10 de cada mes a las 10:15, hora de Lima. Recupera la caché de fuentes, sincroniza dependencias, ejecuta `citytrips-refresh`, instala dependencias web, vuelve a ejecutar lint/tests/build y empaqueta `web/dist` como artefacto de Pages. El job `deploy` depende del build; si cualquier etapa falla, no recibe un artefacto nuevo para publicar. Sus permisos son acotados a `pages: write` e `id-token: write`, mientras que los pasos de construcción solo necesitan lectura del repo.
 
-![Separación entre CI y publicación condicionada a validaciones](https://raw.githubusercontent.com/iovargasjeff/citytrips-nyc/main/docs/images/entrega-ci.svg)
+![Separación entre CI y publicación condicionada a validaciones](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/tt7rla9cmdvg9kg49lxk.png)
 
 ![Ejecución de GitHub Actions con los pasos de build y deploy en verde](https://dev-to-uploads.s3.us-east-2.amazonaws.com/uploads/articles/u7dlia7nrcew70albsce.png)
 
