@@ -15,7 +15,9 @@ function matchesPeriod(month: string, filters: Filters): boolean {
 }
 
 export function filterMonthly(records: MonthlyMetric[], filters: Filters): MonthlyMetric[] {
-  return records.filter((record) => matchesPeriod(record.month, filters))
+  return records
+    .filter((record) => matchesPeriod(record.month, filters))
+    .sort((left, right) => left.month.localeCompare(right.month))
 }
 
 export function filterHourly(records: MonthlyHourMetric[], filters: Filters): MonthlyHourMetric[] {
@@ -35,7 +37,9 @@ export function filterZones(records: ZoneMonthMetric[], filters: Filters): ZoneM
 }
 
 export function filterQuality(records: QualityMetric[], filters: Filters): QualityMetric[] {
-  return records.filter((record) => matchesPeriod(record.month, filters))
+  return records
+    .filter((record) => matchesPeriod(record.month, filters))
+    .sort((left, right) => left.month.localeCompare(right.month))
 }
 
 export function summarizeMonthly(records: MonthlyMetric[]) {

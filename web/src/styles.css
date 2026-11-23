@@ -473,6 +473,17 @@ a {
   min-height: 240px;
 }
 
+.chart-loading {
+  border-radius: 8px;
+  background: linear-gradient(100deg, #1b2836 25%, #243344 45%, #1b2836 65%);
+  background-size: 220% 100%;
+  animation: chart-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes chart-shimmer {
+  to { background-position-x: -220%; }
+}
+
 .empty-chart {
   display: grid;
   min-height: 280px;

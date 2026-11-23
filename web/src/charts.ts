@@ -3,7 +3,6 @@ import {
   BarChart,
   HeatmapChart,
   LineChart,
-  MapChart,
 } from 'echarts/charts'
 import {
   GridComponent,
@@ -19,7 +18,6 @@ registerEChartsModules([
   GridComponent,
   HeatmapChart,
   LineChart,
-  MapChart,
   MarkLineComponent,
   TooltipComponent,
   VisualMapComponent,

@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { registerMap, type EChartsOption } from './charts'
-import Chart from './Chart'
+import { lazy, Suspense, useEffect, useMemo, useState, type ComponentProps } from 'react'
+import type { EChartsOption } from './charts'
 import {
   formatCount,
   formatCoverage,
@@ -25,6 +24,15 @@ type Page = 'overview' | 'zones' | 'quality'
 const EMPTY_FILTERS: Filters = { year: 'all', month: 'all', borough: 'all' }
 const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const DeferredChart = lazy(() => import('./Chart'))
+
+function Chart(props: ComponentProps<typeof DeferredChart>) {
+  return (
+    <Suspense fallback={<div className="chart-canvas chart-loading" aria-hidden="true" style={{ height: props.height ?? 320 }} />}>
+      <DeferredChart {...props} />
+    </Suspense>
+  )
+}
 
 function useDashboardData() {
   const [data, setData] = useState<DashboardData | null>(null)
@@ -36,7 +44,6 @@ function useDashboardData() {
     setError(null)
     try {
       const result = await loadDashboardData()
-      registerMap('nyc-taxi-zones', result.zones as Parameters<typeof registerMap>[1])
       setData(result)
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'The dashboard data could not be loaded.')
@@ -50,7 +57,6 @@ function useDashboardData() {
     loadDashboardData()
       .then((result) => {
         if (!active) return
-        registerMap('nyc-taxi-zones', result.zones as Parameters<typeof registerMap>[1])
         setData(result)
       })
       .catch((caught: unknown) => {
@@ -296,12 +302,13 @@ function OverviewPage({
     visualMap: {
       min: 0,
       max: Math.max(1, ...heatmap.map((point) => point.tripCount)),
-      calculable: true,
       orient: 'horizontal',
       left: 'center',
-      bottom: 0,
-      itemWidth: 14,
-      itemHeight: 120,
+      bottom: 4,
+      itemWidth: 180,
+      itemHeight: 12,
+      text: ['High', 'Low'],
+      calculable: false,
       textStyle: { color: '#91a0b0' },
       inRange: { color: ['#202b39', '#387f82', '#88e0d0'] },
     },
@@ -378,7 +385,7 @@ function ZonesPage({ data, zones }: { data: DashboardData; zones: DashboardData[
       text: ['High', 'Low'],
       textStyle: { color: '#9da9b8' },
       inRange: { color: ['#233143', '#336f79', '#89dfcf'] },
-      calculable: true,
+      calculable: false,
     },
     series: [{
       type: 'map',
@@ -403,7 +410,7 @@ function ZonesPage({ data, zones }: { data: DashboardData; zones: DashboardData[
     <>
       <section className="zone-map-layout">
         <Panel title="Trip origins by TLC zone" eyebrow="PICKUP VOLUME · FILTERABLE PERIOD" className="map-panel" action={`${data.zones.features.length} mapped zones`}>
-          {zones.length ? <Chart option={geoOption} label="Map of NYC taxi zones shaded by pickup trip volume" height={520} /> : <EmptyChart />}
+          {zones.length ? <Chart option={geoOption} label="Map of NYC taxi zones shaded by pickup trip volume" height={520} mapName="nyc-taxi-zones" mapData={data.zones} /> : <EmptyChart />}
         </Panel>
         <Panel title="Top pickup zones" eyebrow="RANKED BY RECORDED TRIPS" className="ranking-panel" action="Top 12">
           {totals.length ? <Chart option={barOption} label="Bar chart of the twelve taxi zones with the most pickup trips" height={520} /> : <EmptyChart />}

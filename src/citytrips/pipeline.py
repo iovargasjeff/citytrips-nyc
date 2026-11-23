@@ -51,11 +51,18 @@ def _run_dbt(repository_root: Path, data_root: Path, database_path: Path) -> Non
     )
 
 
-def _export_relation(connection: duckdb.DuckDBPyConnection, relation: str, path: Path) -> None:
+def _export_relation(
+    connection: duckdb.DuckDBPyConnection,
+    relation: str,
+    path: Path,
+    *,
+    order_by: str | None = None,
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     escaped_path = str(path.resolve()).replace("'", "''")
+    ordering = f" ORDER BY {order_by}" if order_by else ""
     connection.execute(
-        f"COPY (SELECT * FROM {relation}) TO '{escaped_path}' (FORMAT JSON, ARRAY true)"
+        f"COPY (SELECT * FROM {relation}{ordering}) TO '{escaped_path}' (FORMAT JSON, ARRAY true)"
     )
 
 
@@ -103,10 +110,30 @@ def build_public_data(repository_root: Path, data_root: Path, output_dir: Path) 
 
     output_dir.mkdir(parents=True, exist_ok=True)
     with duckdb.connect(database_path.as_posix(), read_only=True) as connection:
-        _export_relation(connection, "mart_monthly", output_dir / "monthly.json")
-        _export_relation(connection, "mart_month_hour", output_dir / "monthly_hour.json")
-        _export_relation(connection, "mart_zone_month", output_dir / "zone_month.json")
-        _export_relation(connection, "mart_quality_monthly", output_dir / "quality.json")
+        _export_relation(
+            connection,
+            "mart_monthly",
+            output_dir / "monthly.json",
+            order_by="month",
+        )
+        _export_relation(
+            connection,
+            "mart_month_hour",
+            output_dir / "monthly_hour.json",
+            order_by="month, borough, weekday, hour",
+        )
+        _export_relation(
+            connection,
+            "mart_zone_month",
+            output_dir / "zone_month.json",
+            order_by="month, location_id",
+        )
+        _export_relation(
+            connection,
+            "mart_quality_monthly",
+            output_dir / "quality.json",
+            order_by="month",
+        )
         quality_cursor = connection.execute("SELECT * FROM mart_quality_monthly")
         quality_columns = [column[0] for column in quality_cursor.description]
         quality_rows = [

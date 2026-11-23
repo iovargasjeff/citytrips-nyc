@@ -2,10 +2,22 @@ import json
 import zipfile
 from pathlib import Path
 
+import duckdb
 import geopandas as gpd
 from shapely.geometry import Polygon
 
-from citytrips.pipeline import _build_geojson
+from citytrips.pipeline import _build_geojson, _export_relation
+
+
+def test_public_json_exports_follow_chronological_order(tmp_path: Path) -> None:
+    output_path = tmp_path / "monthly.json"
+    with duckdb.connect(":memory:") as connection:
+        connection.execute("create table monthly (month varchar, trip_count integer)")
+        connection.execute("insert into monthly values ('2025-01', 2), ('2024-01', 1)")
+        _export_relation(connection, "monthly", output_path, order_by="month")
+
+    records = json.loads(output_path.read_text(encoding="utf-8"))
+    assert [record["month"] for record in records] == ["2024-01", "2025-01"]
 
 
 def test_zone_export_normalizes_boundary_properties(tmp_path: Path) -> None:

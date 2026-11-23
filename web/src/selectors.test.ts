@@ -39,6 +39,10 @@ describe('dashboard selectors', () => {
     expect(monthly[0].reported_congestion_fee_total).toBeNull()
   })
 
+  it('orders monthly data chronologically for the trend chart', () => {
+    expect(filterMonthly([...monthly].reverse(), { year: 'all', month: 'all', borough: 'all' })).toEqual(monthly)
+  })
+
   it('summarizes trips per calendar day and weighted fee coverage', () => {
     const summary = summarizeMonthly(monthly)
     expect(summary.tripCount).toBe(930)
